@@ -1,0 +1,424 @@
+/*
+题目：基于链表的学生信息管理系统
+
+要求：
+
+    （1）插入节点：输入学生信息后，生成节点并插入链表中；
+
+    （2）删除节点：根据给定的学生姓名或学号删除该学生节点；
+
+    （3）查找节点：根据给定的学生姓名或学号查找学生信息，并显示出来；
+
+  （4）查找并显示总成绩最高和最低的学生信息；
+
+     （5）统计链表中的学生人数；
+
+  （6）（时间允许时选做）对链表节点按总成绩从高到低排序。
+
+   注：
+
+   （1）每个学生信息包括：姓名、学号、性别、出生年月日和3门课的成绩；
+
+   （2）系统运行后，首先显示一个简易的菜单，基于菜单操作来完成上述功能；
+
+   （3）链表的功能需要编程实现。
+
+ */
+#include<iostream>
+#include<string.h>
+#include<stdlib.h>
+using namespace std;
+class node
+{
+	
+	friend class list;
+ 	char *name;
+ 	int id;
+ 	int sex;
+ 	int birth;
+ 	int MATH;
+ 	int CH;
+ 	int EN;
+ 	int all;
+ 	node *next;
+	public:
+		node();	
+		node(char*name,int id,int sex,int birth,int MATH,int CH,int EN);
+		node(node &x);
+		void show();
+		node operator = (node x); 
+};
+node::node()
+{
+	name = new char [1];
+	name[0]='\0';
+	id=-1;
+	sex=-1;
+	birth=-1;
+ 	MATH=-1;
+ 	CH=-1;
+ 	EN=-1;
+ 	all=-1;
+}
+
+node::node(char*namet,int idt,int sext,int birtht,int MATHt,int CHt,int ENt)
+{
+	name= new char[strlen(namet)+1];
+	strcpy(name,namet);
+	id=idt;
+	sex=sext;
+	birth=birtht;
+ 	MATH=MATHt;
+ 	CH=CHt;
+ 	EN=ENt;
+ 	all=MATH+CH+EN;
+}
+node::node(node &x)
+{
+	name= new char[strlen(x.name)+1];
+	strcpy(name,x.name);
+	id=x.id;
+	sex=x.sex;
+	birth=x.birth;
+ 	MATH=x.MATH;
+ 	CH=x.CH;
+ 	EN=x.EN;
+ 	all=x.all;
+ 	next=x.next;
+}
+node node::operator =(node x)
+{
+	delete name;
+	name= new char[strlen(x.name)+1];
+	strcpy(name,x.name);
+	id=x.id;
+	sex=x.sex;
+	birth=x.birth;
+ 	MATH=x.MATH;
+ 	CH=x.CH;
+ 	EN=x.EN;
+ 	all=x.all;
+ 	next=x.next;
+ 	return *this;
+}
+void node::show()
+{
+	char *tsex=new char [1];
+	if(sex)
+		strcpy(tsex,"男");
+	else
+		strcpy(tsex,"女");
+	cout<<"姓名："<<name<<" 学号："<<id<<" 性别："<<tsex<<" 生日："<<birth<<" 数学："<<MATH<<" 语文："<<CH<<" 英语："<<EN<<endl; 
+}
+
+class list
+{
+	node* first;
+	node* last;
+	node *creat();
+	public:
+		list(){
+			first=new node;
+			last=new node;
+			first->next=last;
+		}
+		~list(){
+			clear();
+			delete first;	
+		}
+		list &clear();
+		list &insert();
+		list &append();
+		list &del(char *d_name);
+		list &del(int d_id);
+		list &sort();
+		void find(char *f_name);
+		void find(int f_id);
+		void find_max_min();
+		void show();
+		int get_num(); 
+};
+
+list &list::insert()
+{
+	node *temp=creat();
+	temp->next=first->next;
+	first->next=temp;	
+	return *this;
+}
+list& list::append()
+{
+	node *temp=last;
+	*temp=*creat();
+	last=new node;
+	temp->next=last;
+	return *this;
+}
+list& list::del(char *d_name)
+{
+	if(first->next==last)
+	{
+		cout<<"空链表"<<endl;
+		return *this;
+	}
+	node* l=first;
+	while(strcmp(l->next->name,d_name)!=0&& l!=last)
+		l=l->next;
+	if(l->next!=last)
+	{
+		node *temp=l->next;
+		l->next=(l->next)->next;
+		delete temp;
+	}
+	return *this;
+}
+list& list::del(int d_id)
+{
+	if(first->next==last)
+	{
+		cout<<"空链表"<<endl;
+		return *this;
+	}
+	node* l=first;
+	while(l->next->id!=d_id&& l!=last)
+		l=l->next;
+	if(l->next!=last)
+	{
+		node *temp=l->next;
+		l->next=(l->next)->next;
+		delete temp;
+	}
+	return *this;
+}
+list& list::clear()
+{
+	node*iter=first;
+	while(iter->next!=last)
+	{
+		node* temp=iter->next;
+		delete temp;
+		iter=iter->next;
+	}
+	first->next=last;
+	return *this;	
+}
+
+list& list::sort()
+{	
+	node *ptr1, *ptr2, *ptr3;
+    ptr1=first->next;
+    first->next=last;
+    while(ptr1!=last){
+        ptr2=first;
+        while(ptr2->next!=last){
+            if(ptr1->all>ptr2->next->all){
+                ptr3=ptr1->next;
+                ptr1->next=ptr2->next;
+                ptr2->next=ptr1;
+                break;
+            }
+            ptr2=ptr2->next;
+        }
+        if(ptr2->next==last){
+            ptr3=ptr1->next;
+            ptr2->next=ptr1;
+            ptr1->next=last;
+        }
+        ptr1=ptr3;
+    }
+    cout << "总成绩由高到低排列，依次为：" << endl;
+    for(ptr1=first->next;ptr1!=last;ptr1=ptr1->next){
+        cout << "学生姓名：" << ptr1->name << " " << "总成绩为：" << ptr1->all << endl;
+    }
+}
+void list::find(int f_id)
+{
+	if(first->next==last)
+	{
+		cout<<"空链表"<<endl;
+		return ;
+	}
+	node* l=first->next;
+	while(l->id!=f_id && l!=last)
+		l=l->next;
+	if(l!=last)
+		l->show();
+	else
+		cout<<"未找到"<<endl;
+}
+void list::find(char *f_name)
+{	
+	if(first->next==last)
+	{
+		cout<<"空链表"<<endl;
+		return ;
+	}
+	node* l=first->next;
+	while(strcmp(l->name,f_name)!=0&& l!=last)
+		l=l->next;
+	if(l!=last)
+		l->show();
+	else
+		cout<<"未找到"<<endl;
+}
+void list::show()
+{
+	if(first->next==last)
+	{
+		cout<<"空链表"<<endl;
+		return;
+	}
+	node *l=first->next,*r=last;
+	while(l!=r)
+	{
+		l->show();
+		l=l->next;
+	}
+	cout<<endl;
+}
+void list::find_max_min()
+{	
+	if(first->next==last)
+	{
+		cout<<"空链表"<<endl;
+		return;
+	}
+	int max=-1,min=0x3f3f3f;
+	node *maxs=first,*mins=first,*temp=first->next;
+	while(temp!=last)
+	{
+		if( (temp->all) > max )
+		{
+			max=(temp->all);
+			maxs=temp;
+		}
+		if( (temp->all) <min )
+		{	
+			min=(temp->all);
+			mins=temp;
+		}
+		temp=temp->next;
+	}
+	cout<<"成绩最高的为："<<endl;
+	maxs->show();
+	cout<<"成绩最低的为："<<endl;
+	mins->show(); 
+}
+int list::get_num()
+{
+	if(first->next==last)
+	{
+		cout<<"空链表"<<endl;
+		return 0;
+	}
+	node *l=first->next;
+	int num=0;
+	while(l!=last)
+	{
+		num++;
+		l=l->next;
+	}
+	return num;
+}
+node* list::creat()
+{
+	char name[20];
+ 	int id;
+ 	int sex;
+ 	int birth;
+ 	int MATH;
+ 	int CH;
+ 	int EN;
+	cout<<"请输入学生姓名：";
+	cin>>name;
+	cout<<"请输入学生学号：";
+	cin>>id;
+	cout<<"请输入学生性别（男1女0）";
+	cin>>sex;
+	cout<<"请输入学生生辰年月(例：20191014):";
+	cin>>birth;
+	cout<<"请输入数学成绩：";
+	cin>>MATH;
+	cout<<"请输入语文成绩：";
+	cin>>CH;
+	cout<<"请输入英语成绩：";
+	cin>>EN;
+	cout<<endl;
+	node *temp=new node(name,id,sex, birth,MATH,CH,EN);
+	return temp;
+}
+
+int main()
+{
+	list llist;
+	char order[20];
+	int id=0;
+	char in_choose; 
+	char s[20];
+	while ( strcmp(order,"7")!=0    ) {
+		cout << "|++++++++++++++++++++++学生信息管理系统++++++++++++++++++++++++|" << endl;
+		cout << "|                       输入0：插入节点                        |" << endl;
+		cout << "|                       输入1：删除节点                        |" << endl;
+		cout << "|                       输入2：查找节点                        |" << endl;
+		cout << "|                     输入3：显示所有节点                      |" << endl;	
+		cout << "|          输入4：查找并显示总成绩最高和最低的学生信息         |" << endl;
+		cout << "|                 输入5：统计链表中的学生人数                  |" << endl;
+		cout << "|             输入6：对链表节点按总成绩从高到低排序            |" << endl;
+		cout << "|                       输入7：退出系统                        |" << endl;
+		cout << "|++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++|" << endl;
+		cin >> order;
+		switch (order[0]) {
+		case '0': 
+			cout<<"请选择插入方式：（0：头插法，1：尾插法）";
+			cin>>in_choose;
+			if(in_choose=='0')
+				llist.insert();
+			else if(in_choose=='1')
+				llist.append();
+			else
+				cout<<"选择错误"<<endl;
+			break; 
+		case '1': 
+			cout << "请输入要删除的学生姓名或学号：" << endl;
+			cin >> s;
+			id=atol(s);
+			if(id==0)
+				llist.del(s);
+			else
+				llist.del(id);
+			id=0;
+			break; 
+		case '2': 
+			cout << "请输入要查找的学生姓名或学号：" << endl;
+			cin >> s;
+			id=atol(s);
+			if(id==0)
+				llist.find(s);
+			else
+				llist.find(id);
+			id=0;
+			break; 
+		case '3':
+			llist.show();
+			break;
+		case '4': 
+			llist.find_max_min();
+			break; 
+		case '5': 
+			llist.get_num();
+			break; 
+		case '6': 
+			llist.sort();
+			break; 
+		case '7':
+			cout << "退出系统！" << endl;
+			break;
+		default:
+			cout << "输入错误信息！请重新输入。" << endl;
+			cin >> order;
+			break;
+		}
+	}
+	system("pause");
+	return 0;
+}
