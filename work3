@@ -1,0 +1,101 @@
+#include<iostream>
+using namespace std;
+/*设计一个类，用于对字符串进行管理。要求：
+（1）在定义对象时，能够确定字符串的最大长度并清空字符串。√ 
+（2）定义成员函数input, 用于从键盘为字符串输入数据。√ 
+（3）定义运算符重载函数，用于判断两个对象中的字符串是否相同。
+（4）定义成员函数exchange，用于互换字符串中ASCII码最大和最小的字符（需考虑字符串中存在多个最大和最小字符的情况）。
+（5）定义成员函数disp，用于显示字符串。
+（6）定义main函数，合理地调用上述每个函数。*/
+class String
+{
+	int len;
+	char *p;
+	public:
+		String(int n);
+		~String();
+		void input();
+		bool operator == (const String &s);
+		void exchange();
+		void disp();
+};
+String::String(int n)
+{
+	if(n>0)
+		len = n;
+	else
+		cout<<"不正确的字符串长度"<<endl;
+	p=new char [len];
+	for(int i=0;i<n;i++)
+		*(p+i)='0';
+}
+String::~String()
+{
+	delete []p;
+}
+void String::disp()
+{
+	cout<<"字符串为：";	
+	for(int i=0;i<len&&*(p+i)!='\0';i++)
+		cout<<*(p+i);
+	cout<<endl;
+}
+void String::input()
+{
+	cout<<"请输入长度为"<<len<<"的字符串"<<endl;
+	for(int i=0;i<len;i++)
+	{
+		cin>>*(p+i);
+	 } 
+}
+bool String::operator==(const String &s)
+{
+	for (int i = 0; i < len; i++)
+		if (*(p+i) !=*(s.p+i))
+			return false;
+	return true;
+}
+void String::exchange()
+{
+	char cmax = *p;
+	char cmin = *p;
+	for (int i = 0; i < len; i++)
+		if (*(p+i) > cmax)
+			cmax = *(p+i);
+		else if (*(p+i) < cmin)
+			cmin = *(p+i);
+	if (cmax == cmin)
+		cout << "所有字符相同，无最大最小字符" << endl;
+	else
+		for (int i = 0; i < len; i++)
+			if (*(p+i) == cmax)
+				*(p+i) = cmin;
+			else if (*(p+i) == cmin)
+				*(p+i) = cmax;
+}
+int main()
+{
+	int n;
+	cout<<"创建第一个字符串：";
+	cin>>n;
+	String s1(n);
+	s1.input();
+	s1.disp();
+	
+	cout<<"创建第二个字符串："; 
+	cin>>n;
+	String s2(n);
+	s2.input();
+	s2.disp();
+	
+	s2==s1?cout<<"两字符串相等":cout<<"两字符串不等";
+	cout<<endl;
+	
+	s1.exchange();
+	s1.disp();
+	
+	s2.exchange();
+	s2.disp();
+	
+	return 0;
+}
