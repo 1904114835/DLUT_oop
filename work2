@@ -1,0 +1,87 @@
+#include<iostream>
+using namespace std;
+class array
+{
+	int *a;
+	public:
+		array()
+		{
+			a=new int[10];
+			for (int i =0;i<10;i++)
+				a[i]=0;
+		}
+		~array()
+		{
+			delete []a;	
+		}
+		void input()
+		{
+			cout<<"请依次输入10个整数，以空格隔开:"<<endl;
+			for (int i=0;i<10;i++)
+				cin>>a[i];
+		}
+		void disp()
+		{
+			cout<<"数组为："<<endl;
+			for(int i=0;i<9;i++)
+				cout<<a[i]<<" ";
+			cout<<a[9]<<endl;
+		}
+		int max_num(int *max_num)
+		{
+			int max=-0x3f3f3f;
+			for(int i =0;i<10;i++)
+				if(a[i]>max)
+					max=a[i];
+			for(int i =0;i<10;i++)
+				if(a[i]==max)
+					(*max_num)++;
+			return max;
+		}
+
+		int find()
+		{
+			int vec[10][2]={0};
+			int point=1;
+			for(int i=0;i<10;i++)
+			{
+				int flag=0;
+				for(int j=0;j<point;j++)
+				{
+					if(a[i]==vec[j][0])
+					{
+						vec[j][1]++;
+						flag=1;
+						break;
+					}
+				}
+				if(flag==0)
+				{
+					vec[point-1][0]=a[i];
+					point++;
+				}	
+			}
+			//for(int i=0;i<10;i++)
+			//	cout<<vec[i][0]<<" "<<vec[i][1]<<endl;
+			int args=0;
+			for(int i=0;i<point-1;i++)
+				if(vec[i][1]>0)
+					cout<<"重复的数字："<<vec[i][0]<<"\t重复次数："<<vec[i][1]+1<<endl;
+			for(int i=0;i<point-1;i++)
+				if(vec[i][1]>vec[args][1])
+					args=i;
+			cout<<"重复最多的数字是："<< vec[args][0]<<"\t重复次数为："<<vec[args][1]<<endl;
+		} 
+};
+
+int main()
+{
+	int max_num=0,max=-1;
+	array a;
+	a.input();
+	a.disp();
+	max=a.max_num(&max_num);
+	cout<<"最大值为："<<max<<"\n最大值的个数为："<<max_num<<endl;
+	a.find();
+	return 0;
+}
