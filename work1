@@ -1,0 +1,58 @@
+#include<iostream>
+using namespace std;
+const int R=3;
+const int C=4;
+
+void creat_num(int **p);
+void show(int **p);
+void find_sec(int **p);
+
+int main()
+{
+	int **p = new int*[R];
+	for(int i = 0; i < R; i++)
+		p[i] = new int[C];
+	creat_num(p);
+	show(p); 
+	find_sec(p);
+}
+
+void creat_num(int **p)
+{
+	cout<<"请输入"<<R<<"行"<<C<<"列的二维数组："<<endl;
+	for(int i = 0; i < R; i++)
+		for(int j = 0; j < C; j++)
+			cin >> *(*(p + i) + j);
+}
+
+void show(int **p)
+{
+	cout<<"数组如下："<<endl;
+	for(int i=0;i<R;i++)
+	for(int j=0;j<C;j++)
+	{
+		cout<<*(*(p+i)+j);
+		j==C-1?cout<<"\n":cout<<" ";
+	}
+}
+
+void find_sec(int **p) 
+{
+	for(int i=0;i<R;i++)
+	{
+		int *t=*(p+i);
+		int max=0;	//这里的max和next都是下标，如果记录值代码会更简单一些 
+		int next=0;
+		for(int j=0;j<C;j++)//找到最大值 
+			if(*(t+j)>*(t+max))
+				max=j;
+		if(max==0)//若第一个为最大值或所有值相同，max都为0 
+			while(*(t+next++)==*(t)){}//寻找第一个比max小的数，若next大于等于C，说明所有数相同 
+		for(int j=0;j<C;j++)
+			if(*(t+j)>=*(t+next)&&*(t+j)!=*(t+max)&&next<C)//因为用了大于等于，会找到最后一个 
+				next=j;
+		(next==0&&next==max)||next>=C?
+			cout<<"第"<<i+1<<"行所有值相同，无次大值"<<endl:
+			cout<<"第"<<i+1<<"行次大值为"<<*(t+next)<<endl;
+	}
+}
