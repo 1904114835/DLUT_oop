@@ -1,0 +1,94 @@
+#include<iostream>
+using namespace std;
+
+namespace ax
+{ 
+	namespace bx{ 
+	namespace ax{  
+	namespace bx{ 
+	namespace ax{  
+	namespace bx{  
+	namespace ax{  
+	namespace bx{
+		int a=111; 
+	}}}}}}}
+} 
+class two
+{
+	int x;
+	int y;
+	public:
+		two(){x=0;y=0;};
+		two(int xx,int yy){x=xx;y=yy;};
+		two(const two &a){x=a.x;y=a.y;}
+		two(int *xx){x=xx[0];y=xx[1];}
+		~two(){};
+		int operator == (two &b)
+		{
+			if(x==b.x&&y==b.y)
+				return 1;
+			else
+				return 0;
+		}
+		operator int(){return x;};
+		two &operator += (two &b);
+		two &operator -= (two &b)
+		{
+			x-=b.x;
+			y-=b.y;
+			return *this;
+		}
+		two operator + (two &b)
+		{
+			return two(x+b.x,y+b.y );
+		};
+		friend ostream &operator <<(ostream &out,two &a)
+		{
+			out<<"x:"<<a.x<<" y:"<<a.y;
+			return out;
+		}
+		friend istream &operator >>(istream &in,two &a)
+		{
+			in>>a.x>>a.y;
+			return in;
+		}
+		void plot();
+};
+two &two::operator +=(two &b)
+{
+	x+=b.x;
+	y+=b.y;
+	return *this;
+}
+void two::plot()
+{
+	cout<<"x="<<x<<" y="<<y<<endl;}
+int main()
+{
+	two a;
+	two b;
+	cin>>a;
+	cout<<"a:";
+	a.plot();
+	cout<<a<<endl;
+	cout<<"b:";
+	b.plot();
+	b+=a;
+	cout<<"b:";
+	b.plot();
+	two c=a+b;
+	cout<<"c:";
+	c.plot();
+	two d;
+	int *tempin=new int[2];
+	tempin[0]=0x3f;
+	tempin[1]=11;
+	d=tempin;
+	cout<<"d:";
+	d.plot();
+	int e;
+	e=d;
+	cout<<"e="<<e<<endl;
+	cout<<ax::bx::ax::bx::ax::bx::ax::bx::a;
+	return 0;
+}
