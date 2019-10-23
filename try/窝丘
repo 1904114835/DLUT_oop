@@ -1,0 +1,41 @@
+#include <iostream>
+using namespace std;
+class base
+{
+	int x;
+	public:
+		base(){x=0;}
+		base(int a){x=a;}
+		void set(int a){
+			x=a;
+		}
+		int get(){
+			return x;
+		}
+		void plot(){
+			cout<<"x="<<x;
+		}
+};
+
+class d1:virtual public base{};
+class d2:virtual public base{};
+
+class d3:public d1,public d2{};
+
+int main()
+{
+	d3 x;
+	x.set(10);
+	x.set(20);
+	x.plot();
+	//如果d1、d2 virtual引用base， 相当于中间的d1，d2都被隐藏了，调用的是默认的base
+	// 如果d1、d2直接引用base，那么会有两个实在的d1、d2，需要用d1::的方式来set和get 
+	
+	d2 b;
+	d2 c;
+	b.set(11);
+	c.set(12);
+	b.plot();
+	c.plot();
+	return 0;
+}
