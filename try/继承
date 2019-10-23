@@ -1,0 +1,95 @@
+#include<iostream>
+using namespace std;
+class base
+{
+	int va;
+	int vb;
+	public:
+		base()
+		{
+			va=0;vb=0;
+		}
+		base(int x,int y){
+			va=x;vb=y;
+		}
+		void set(int x,int y)
+		{
+			va=x;vb=y;
+		}
+//	
+	virtual	 void plot(){
+			cout<<"a:"<<va<<" b:"<<vb<<endl;
+		}
+}; 
+class derive:public base
+{
+	int vc;
+	public:
+		derive():base(){
+			vc=0;
+		}
+		derive(int x,int y,int z){
+			set(x,y); 
+			vc=z;
+		}
+		void plot(){
+			cout<<"派生类1："<<endl;
+			base::plot();
+			cout<<"c:"<<vc<<endl;
+		}
+};
+class derive2:public base
+{
+		int vd;
+	public:
+		derive2():base(){
+			vd=0;
+		}
+		derive2(int x,int y,int z){
+			set(x,y); 
+			vd=z;
+		}
+		void plot(){
+			cout<<"派生类2："<<endl;
+			base::plot();
+			cout<<"d:"<<vd<<endl;
+		}
+};
+
+class dderive:public derive ,derive2
+{	
+	int ve;
+	public:
+		dderive():derive(),derive2(){
+			ve=0;
+		}
+		dderive(int x,int y,int z){
+			derive();
+			derive2();
+			ve=z;
+		}
+		void plot(){
+			cout<<"派生类dd："<<endl;
+			derive::plot();
+			derive2::plot();
+			cout<<"e:"<<ve<<endl;
+		}
+	
+};
+int main()
+{
+	base _1;
+	derive _2(4,5,6);
+	base *p;
+	p=& _2;
+	_1.plot();
+	p->plot();
+	
+	derive2 _3;
+	_3.plot();
+	 
+	dderive _4;
+	_4.plot();
+	
+	return 0;
+}
