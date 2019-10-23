@@ -1,0 +1,28 @@
+#include<iostream>
+using namespace std;
+int f()
+{
+	cout<<"________________________"<<endl;
+	return 19260817;
+}
+
+class fun
+{
+	int x;
+	public:
+		static int a;
+		fun(int a=10){x=a;a=a;}
+		int operator () (){return x;}
+		int operator () (int y){return x+y;}		
+};
+
+int main()
+{	
+	int *p;
+	p=&fun::a;
+	cout<<f()<<endl;
+	fun f(20);
+	cout<<f()<<endl;
+	cout<<f(10)<<endl;
+	return 0;
+}
