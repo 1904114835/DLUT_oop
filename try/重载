@@ -1,0 +1,28 @@
+#include<iostream>
+using namespace std;
+
+class inout
+{
+	char x[20];
+	public :
+		inout(){for(int i=0;i<20;i++)x[i]='\0';};
+		friend ostream &operator <<(ostream &out,inout&a)
+		{
+			out<<"--"<<a.x<<"--";
+			return out;
+		}
+		friend istream &operator >>(istream &in,inout&a)
+		{
+			cout<<"输入:"<<endl;
+			in>>a.x;
+			return in;
+		}
+};
+
+int main()
+{
+	inout aa;
+	cin>>aa;
+	cout<<aa;
+	return 0;
+}
